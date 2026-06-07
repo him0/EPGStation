@@ -1,0 +1,14 @@
+# npm からの移行プロジェクトのため、node_modules を npm 同様のフラット配置にする。
+# これにより src/@types/types.d.ts が参照する eventemitter3 や、@types/cors のような
+# transitive な型定義が解決できるようになる。
+nodeLinker: hoisted
+
+# ネイティブアドオンのビルドを許可する依存(postinstall でビルドが走る)
+allowBuilds:
+  sqlite3: true
+  mirakurun: true
+
+# @types/express(v4)が transitive で @types/serve-static@2.x(express5 用)を
+# 引き込んでしまい express.static.mime の型が消えるため、v4 互換の 1.15.x に固定する。
+overrides:
+  '@types/serve-static': 1.15.7
