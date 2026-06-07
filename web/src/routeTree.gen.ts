@@ -10,11 +10,65 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StoragesRouteImport } from './routes/storages'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as RuleRouteImport } from './routes/rule'
+import { Route as ReservesRouteImport } from './routes/reserves'
+import { Route as RecordingRouteImport } from './routes/recording'
+import { Route as RecordedRouteImport } from './routes/recorded'
+import { Route as OnairRouteImport } from './routes/onair'
+import { Route as GuideRouteImport } from './routes/guide'
+import { Route as EncodeRouteImport } from './routes/encode'
 import { Route as IndexRouteImport } from './routes/index'
 
 const StoragesRoute = StoragesRouteImport.update({
   id: '/storages',
   path: '/storages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RuleRoute = RuleRouteImport.update({
+  id: '/rule',
+  path: '/rule',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReservesRoute = ReservesRouteImport.update({
+  id: '/reserves',
+  path: '/reserves',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordingRoute = RecordingRouteImport.update({
+  id: '/recording',
+  path: '/recording',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordedRoute = RecordedRouteImport.update({
+  id: '/recorded',
+  path: '/recorded',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnairRoute = OnairRouteImport.update({
+  id: '/onair',
+  path: '/onair',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EncodeRoute = EncodeRouteImport.update({
+  id: '/encode',
+  path: '/encode',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +79,97 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/encode': typeof EncodeRoute
+  '/guide': typeof GuideRoute
+  '/onair': typeof OnairRoute
+  '/recorded': typeof RecordedRoute
+  '/recording': typeof RecordingRoute
+  '/reserves': typeof ReservesRoute
+  '/rule': typeof RuleRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
   '/storages': typeof StoragesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/encode': typeof EncodeRoute
+  '/guide': typeof GuideRoute
+  '/onair': typeof OnairRoute
+  '/recorded': typeof RecordedRoute
+  '/recording': typeof RecordingRoute
+  '/reserves': typeof ReservesRoute
+  '/rule': typeof RuleRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
   '/storages': typeof StoragesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/encode': typeof EncodeRoute
+  '/guide': typeof GuideRoute
+  '/onair': typeof OnairRoute
+  '/recorded': typeof RecordedRoute
+  '/recording': typeof RecordingRoute
+  '/reserves': typeof ReservesRoute
+  '/rule': typeof RuleRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
   '/storages': typeof StoragesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/storages'
+  fullPaths:
+    | '/'
+    | '/encode'
+    | '/guide'
+    | '/onair'
+    | '/recorded'
+    | '/recording'
+    | '/reserves'
+    | '/rule'
+    | '/search'
+    | '/settings'
+    | '/storages'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/storages'
-  id: '__root__' | '/' | '/storages'
+  to:
+    | '/'
+    | '/encode'
+    | '/guide'
+    | '/onair'
+    | '/recorded'
+    | '/recording'
+    | '/reserves'
+    | '/rule'
+    | '/search'
+    | '/settings'
+    | '/storages'
+  id:
+    | '__root__'
+    | '/'
+    | '/encode'
+    | '/guide'
+    | '/onair'
+    | '/recorded'
+    | '/recording'
+    | '/reserves'
+    | '/rule'
+    | '/search'
+    | '/settings'
+    | '/storages'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EncodeRoute: typeof EncodeRoute
+  GuideRoute: typeof GuideRoute
+  OnairRoute: typeof OnairRoute
+  RecordedRoute: typeof RecordedRoute
+  RecordingRoute: typeof RecordingRoute
+  ReservesRoute: typeof ReservesRoute
+  RuleRoute: typeof RuleRoute
+  SearchRoute: typeof SearchRoute
+  SettingsRoute: typeof SettingsRoute
   StoragesRoute: typeof StoragesRoute
 }
 
@@ -56,6 +180,69 @@ declare module '@tanstack/react-router' {
       path: '/storages'
       fullPath: '/storages'
       preLoaderRoute: typeof StoragesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rule': {
+      id: '/rule'
+      path: '/rule'
+      fullPath: '/rule'
+      preLoaderRoute: typeof RuleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reserves': {
+      id: '/reserves'
+      path: '/reserves'
+      fullPath: '/reserves'
+      preLoaderRoute: typeof ReservesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recording': {
+      id: '/recording'
+      path: '/recording'
+      fullPath: '/recording'
+      preLoaderRoute: typeof RecordingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recorded': {
+      id: '/recorded'
+      path: '/recorded'
+      fullPath: '/recorded'
+      preLoaderRoute: typeof RecordedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onair': {
+      id: '/onair'
+      path: '/onair'
+      fullPath: '/onair'
+      preLoaderRoute: typeof OnairRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/encode': {
+      id: '/encode'
+      path: '/encode'
+      fullPath: '/encode'
+      preLoaderRoute: typeof EncodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +257,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EncodeRoute: EncodeRoute,
+  GuideRoute: GuideRoute,
+  OnairRoute: OnairRoute,
+  RecordedRoute: RecordedRoute,
+  RecordingRoute: RecordingRoute,
+  ReservesRoute: ReservesRoute,
+  RuleRoute: RuleRoute,
+  SearchRoute: SearchRoute,
+  SettingsRoute: SettingsRoute,
   StoragesRoute: StoragesRoute,
 }
 export const routeTree = rootRouteImport
