@@ -9,7 +9,6 @@ import { ServeStaticOptions } from 'serve-static';
 import { inject, injectable } from 'inversify';
 import * as yaml from 'js-yaml';
 import * as log4js from 'log4js';
-import { mkdirp } from 'mkdirp';
 import multer from 'multer';
 import { OpenAPIV3 } from 'openapi-types';
 import * as path from 'path';
@@ -213,8 +212,8 @@ class ServiceServer implements IServiceServer {
         try {
             fs.statSync(this.config.uploadTempDir);
         } catch (e: any) {
-            this.log.system.info(`mkdirp: ${this.config.uploadTempDir}`);
-            mkdirp.sync(this.config.uploadTempDir);
+            this.log.system.info(`mkdir: ${this.config.uploadTempDir}`);
+            fs.mkdirSync(this.config.uploadTempDir, { recursive: true });
         }
     }
 

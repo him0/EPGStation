@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import minimist from 'minimist';
 import 'reflect-metadata';
-import { install } from 'source-map-support';
 import * as apid from '../api';
 import Recorded from './db/entities/Recorded';
 import RecordedHistory from './db/entities/RecordedHistory';
@@ -23,7 +22,7 @@ import * as containerSetter from './model/ModelContainerSetter';
 import StrUtil from './util/StrUtil';
 import { OldBackupData, OldEncodedItem, OldRecordedHistoryItem, OldRecordedItem, OldRuleItem } from './v1';
 
-install();
+process.setSourceMapsEnabled(true);
 
 containerSetter.set(container);
 

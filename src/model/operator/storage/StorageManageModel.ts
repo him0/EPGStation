@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import diskusage from 'diskusage-ng';
+import checkDiskSpace from 'check-disk-space';
 import { inject, injectable } from 'inversify';
 import Recorded from '../../../db/entities/Recorded';
 import ProcessUtil from '../../../util/ProcessUtil';
@@ -157,15 +157,7 @@ export default class StorageManageModel implements IStorageManageModel {
      * @return Promise<number>
      */
     private getFreeSize(dirPath: string): Promise<number> {
-        return new Promise<number>((resolve, reject) => {
-            diskusage(dirPath, (err, usage) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(usage.available);
-                }
-            });
-        });
+        return checkDiskSpace(dirPath).then(diskSpace => diskSpace.free);
     }
 
     /**

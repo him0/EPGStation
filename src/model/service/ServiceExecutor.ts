@@ -1,12 +1,11 @@
 import * as path from 'path';
 import 'reflect-metadata';
-import { install } from 'source-map-support';
 import ILoggerModel from '../ILoggerModel';
 import container from '../ModelContainer';
 import * as containerSetter from '../ModelContainerSetter';
 import IEncodeFinishModel from './encode/IEncodeFinishModel';
 import IServiceServer from './IServiceServer';
-install();
+process.setSourceMapsEnabled(true);
 
 containerSetter.set(container);
 
