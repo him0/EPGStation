@@ -21,6 +21,8 @@ export default defineConfig({
     },
   },
   server: {
+    // 全インターフェースで待ち受け、IP / LAN 経由のアクセスを許可する
+    host: true,
     proxy: {
       '/api': { target: API_TARGET, changeOrigin: true },
       '/socket.io': { target: API_TARGET, changeOrigin: true, ws: true },
