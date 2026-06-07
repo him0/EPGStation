@@ -30,10 +30,13 @@ export default defineConfig([
     },
   },
   {
-    // shadcn/ui の vendored コンポーネントは variants 等も export するため対象外にする
-    files: ['src/components/ui/**/*.tsx'],
+    // shadcn/ui の vendored コンポーネント(と付随 hook)は variants 等の export や
+    // React Compiler 向けの新ルールに抵触するため、これらのルールを対象外にする
+    files: ['src/components/ui/**/*.{ts,tsx}', 'src/hooks/use-mobile.ts'],
     rules: {
       'react-refresh/only-export-components': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 ])
