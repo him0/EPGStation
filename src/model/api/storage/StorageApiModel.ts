@@ -1,4 +1,4 @@
-import diskusage from 'diskusage-ng';
+import checkDiskSpace from 'check-disk-space';
 import { inject, injectable } from 'inversify';
 import * as apid from '../../../../api';
 import IConfigFile from '../../IConfigFile';
@@ -36,18 +36,12 @@ export default class StorageApiModel implements IStorageApiModel {
      * @param dirPath ディスクディレクトリ
      */
     private getDiskInfo(dirPath: string): Promise<apid.DiskUsage> {
-        return new Promise<apid.DiskUsage>((resolve, reject) => {
-            diskusage(dirPath, (err, usage) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve({
-                        available: usage.available,
-                        used: usage.used,
-                        total: usage.total,
-                    });
-                }
-            });
+        return checkDiskSpace(dirPath).then(diskSpace => {
+            return {
+                available: diskSpace.free,
+                used: diskSpace.size - diskSpace.free,
+                total: diskSpace.size,
+            };
         });
     }
 }
