@@ -7,7 +7,7 @@ export const del: Operation = async (req, res) => {
     const reserveApiModel = container.get<IReserveApiModel>('IReserveApiModel');
 
     try {
-        api.responseJSON(res, 200, await reserveApiModel.removeSkip(parseInt(req.params.reserveId, 10)));
+        api.responseJSON(res, 200, await reserveApiModel.removeSkip(parseInt(req.params.reserveId as string, 10)));
     } catch (err: any) {
         api.responseServerError(res, err.message);
     }

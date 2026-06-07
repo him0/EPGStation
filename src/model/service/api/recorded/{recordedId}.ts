@@ -8,7 +8,7 @@ export const get: Operation = async (req, res) => {
 
     try {
         const recorded = await recordedApiModel.get(
-            parseInt(req.params.recordedId, 10),
+            parseInt(req.params.recordedId as string, 10),
             req.query.isHalfWidth as any as boolean,
         );
         if (recorded === null) {
@@ -67,7 +67,7 @@ export const del: Operation = async (req, res) => {
     const recordedApiModel = container.get<IRecordedApiModel>('IRecordedApiModel');
 
     try {
-        await recordedApiModel.delete(parseInt(req.params.recordedId, 10));
+        await recordedApiModel.delete(parseInt(req.params.recordedId as string, 10));
         api.responseJSON(res, 200, { code: 200 });
     } catch (err: any) {
         api.responseServerError(res, err.message);

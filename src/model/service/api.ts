@@ -37,7 +37,6 @@ export const responseServerError = (res: express.Response, err?: string): expres
     return res;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const responseJSON = (res: express.Response, code: number, body?: any): express.Response => {
     res.status(code);
     // non-cache
@@ -145,7 +144,6 @@ const sendResponse = (
     code: number,
     req: express.Request,
     res: express.Response,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     responseHeaders: {},
     readable: fs.ReadStream | null,
 ): void => {

@@ -8,7 +8,7 @@ export const del: Operation = async (req, res) => {
     const recordedTagApiModel = container.get<IRecordedTagApiModel>('IRecordedTagApiModel');
 
     try {
-        const tagId: apid.RecordedTagId = parseInt(req.params.tagId, 10);
+        const tagId: apid.RecordedTagId = parseInt(req.params.tagId as string, 10);
         await recordedTagApiModel.delete(tagId);
         api.responseJSON(res, 200, { code: 200 });
     } catch (err: any) {
@@ -46,7 +46,7 @@ export const put: Operation = async (req, res) => {
     const recordedTagApiModel = container.get<IRecordedTagApiModel>('IRecordedTagApiModel');
 
     try {
-        const tagId: apid.RecordedTagId = parseInt(req.params.tagId, 10);
+        const tagId: apid.RecordedTagId = parseInt(req.params.tagId as string, 10);
         const name: string = req.body.name;
         const color: string = req.body.color;
         await recordedTagApiModel.update(tagId, name, color);

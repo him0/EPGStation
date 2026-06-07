@@ -12,7 +12,7 @@ export const get: Operation = async (req, res) => {
         }
 
         const playlist = await streamApiModel.getLiveM2TsStreamM3u8(req.headers.host, api.isSecureProtocol(req), {
-            channelId: parseInt(req.params.channelId, 10),
+            channelId: parseInt(req.params.channelId as string, 10),
             mode: parseInt(req.query.mode as string, 10),
         });
 

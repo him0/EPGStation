@@ -7,7 +7,7 @@ export const del: Operation = async (req, res) => {
     const recordedApiModel = container.get<IRecordedApiModel>('IRecordedApiModel');
 
     try {
-        await recordedApiModel.stopEncode(parseInt(req.params.recordedId, 10));
+        await recordedApiModel.stopEncode(parseInt(req.params.recordedId as string, 10));
         api.responseJSON(res, 200, { code: 200 });
     } catch (err: any) {
         api.responseServerError(res, err.message);

@@ -15,7 +15,7 @@ export const post: Operation = async (req, res) => {
             req.headers.host,
             api.isSecureProtocol(req),
             req.body.kodiName,
-            parseInt(req.params.videoFileId, 10),
+            parseInt(req.params.videoFileId as string, 10),
         );
         api.responseJSON(res, 200, { code: 200 });
     } catch (err: any) {

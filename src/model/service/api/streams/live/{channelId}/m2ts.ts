@@ -27,7 +27,7 @@ export const get: Operation = async (req, res) => {
 
     try {
         result = await streamApiModel.startLiveM2TsStream({
-            channelId: parseInt(req.params.channelId, 10),
+            channelId: parseInt(req.params.channelId as string, 10),
             mode: parseInt(req.query.mode as string, 10),
         });
         keepTimer = setInterval(() => {
