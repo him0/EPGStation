@@ -24,7 +24,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -102,7 +101,6 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>メニュー</SidebarGroupLabel>
           <SidebarMenu>
             {navItems.map(item => (
               <NavMenuItem key={`${item.to}-${item.label}`} item={item} />
