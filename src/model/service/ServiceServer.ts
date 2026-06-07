@@ -5,6 +5,7 @@ import * as openapi from 'express-openapi';
 import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
+import { ServeStaticOptions } from 'serve-static';
 import { inject, injectable } from 'inversify';
 import * as yaml from 'js-yaml';
 import * as log4js from 'log4js';
@@ -21,7 +22,6 @@ import ILoggerModel from '../ILoggerModel';
 import IServiceServer from './IServiceServer';
 import ISocketIOManageModel from './socketio/ISocketIOManageModel';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const swaggerdist = require('swagger-ui-dist');
 
 @injectable()
@@ -56,7 +56,6 @@ class ServiceServer implements IServiceServer {
         this.setSwaggerUI();
         this.createUploadDir();
         this.initOpenApi(api);
-        this.setMime();
         this.setStaticFiles();
     }
 
@@ -124,42 +123,57 @@ class ServiceServer implements IServiceServer {
     }
 
     /**
-     * mime 設定
+     * 拡張子ごとの mime 設定。
+     * serve-static v2 で express.static.mime.define が廃止されたため、
+     * express.static の setHeaders オプションで Content-Type を上書きする。
      */
-    private setMime(): void {
-        // static mime
-        express.static.mime.define({ 'text/css': ['css', 'min.css'] });
-        express.static.mime.define({ 'text/javascript': ['js', 'min.js'] });
-        express.static.mime.define({
-            'application/vnd.ms-fontobject': ['eot'],
-        });
-        express.static.mime.define({ 'application/font-ttf': ['ttf'] });
-        express.static.mime.define({ 'application/font-woff': ['woff'] });
-        express.static.mime.define({ 'application/font-woff2': ['woff2'] });
-        express.static.mime.define({ 'magnus-internal/imagemap': ['map'] });
-        express.static.mime.define({ 'image/png': ['png'] });
-        express.static.mime.define({ 'image/jpg': ['jpg'] });
-        express.static.mime.define({ 'video/mpeg': ['ts'] });
-        express.static.mime.define({ 'application/octet-stream': ['m4s'] });
-        express.static.mime.define({ 'video/MP2T': ['m3u8'] });
-        express.static.mime.define({ 'text/plain': ['log'] });
+    private static readonly MIME_MAP: { [ext: string]: string } = {
+        '.css': 'text/css',
+        '.js': 'text/javascript',
+        '.eot': 'application/vnd.ms-fontobject',
+        '.ttf': 'application/font-ttf',
+        '.woff': 'application/font-woff',
+        '.woff2': 'application/font-woff2',
+        '.map': 'magnus-internal/imagemap',
+        '.png': 'image/png',
+        '.jpg': 'image/jpg',
+        '.ts': 'video/mpeg',
+        '.m4s': 'application/octet-stream',
+        '.m3u8': 'video/MP2T',
+        '.log': 'text/plain',
+    };
+
+    /**
+     * express.static に渡す Content-Type 上書き用 setHeaders コールバックを返す
+     */
+    private static setMimeHeaders(res: http.ServerResponse, filePath: string): void {
+        const ext = path.extname(filePath).toLowerCase();
+        const type = ServiceServer.MIME_MAP[ext];
+        if (typeof type !== 'undefined') {
+            res.setHeader('Content-Type', type);
+        }
     }
 
     /**
      * ファイル読み込み url 設定
      */
     private setStaticFiles(): void {
+        const staticOption: ServeStaticOptions = { setHeaders: ServiceServer.setMimeHeaders };
+
         // static files
-        this.app.use(this.createUrl('/img'), express.static(path.join(__dirname, '..', '..', '..', 'img')));
+        this.app.use(
+            this.createUrl('/img'),
+            express.static(path.join(__dirname, '..', '..', '..', 'img'), staticOption),
+        );
 
         // thumbnail
-        this.app.use(this.createUrl('/thumbnail'), express.static(this.config.thumbnail));
+        this.app.use(this.createUrl('/thumbnail'), express.static(this.config.thumbnail, staticOption));
 
         // streamFile
-        this.app.use(this.createUrl('/streamfiles'), express.static(this.config.streamFilePath));
+        this.app.use(this.createUrl('/streamfiles'), express.static(this.config.streamFilePath, staticOption));
 
         // client
-        this.app.use(this.createUrl('/'), express.static(ServiceServer.CLIENT_DIR));
+        this.app.use(this.createUrl('/'), express.static(ServiceServer.CLIENT_DIR, staticOption));
     }
 
     /**

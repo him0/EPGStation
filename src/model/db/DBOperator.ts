@@ -46,7 +46,8 @@ export default class DBOperator implements IDBOperator {
         let connection: DataSource;
         if (this.config.dbtype === 'sqlite') {
             connection = new DataSource({
-                type: 'sqlite',
+                // typeorm 1.0 で node-sqlite3 ドライバ('sqlite')が廃止されたため better-sqlite3 を使用する
+                type: 'better-sqlite3',
                 database: path.join(appRootPath, 'data', 'database.db'),
                 synchronize: false,
                 logging: false,

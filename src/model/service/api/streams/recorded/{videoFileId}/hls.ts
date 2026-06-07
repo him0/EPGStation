@@ -8,7 +8,7 @@ export const get: Operation = async (req, res) => {
 
     try {
         const streamId = await streamApiModel.startRecordedHLSStream({
-            videoFileId: parseInt(req.params.videoFileId, 10),
+            videoFileId: parseInt(req.params.videoFileId as string, 10),
             playPosition: parseInt(req.query.ss as string, 10),
             mode: parseInt(req.query.mode as string, 10),
         });

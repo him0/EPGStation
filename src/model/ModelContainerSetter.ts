@@ -242,12 +242,12 @@ export const set = (container: Container): void => {
 
     container.bind<IRecorderModel>('IRecorderModel').to(RecorderModel);
 
-    container.bind<RecorderModelProvider>('RecorderModelProvider').toProvider(context => {
+    container.bind<RecorderModelProvider>('RecorderModelProvider').toDynamicValue(context => {
         return () => {
             return new Promise<IRecorderModel>(
                 (resolve: (model: IRecorderModel) => void, reject: (err: Error) => void) => {
                     try {
-                        const recorderModel = context.container.get<IRecorderModel>('IRecorderModel');
+                        const recorderModel = context.get<IRecorderModel>('IRecorderModel');
                         resolve(recorderModel);
                     } catch (err: any) {
                         reject(err);
@@ -321,12 +321,12 @@ export const set = (container: Container): void => {
 
     container.bind<IEncoderModel>('IEncoderModel').to(EncoderModel);
 
-    container.bind<EncoderModelProvider>('EncoderModelProvider').toProvider(context => {
+    container.bind<EncoderModelProvider>('EncoderModelProvider').toDynamicValue(context => {
         return () => {
             return new Promise<IEncoderModel>(
                 (resolve: (model: IEncoderModel) => void, reject: (err: Error) => void) => {
                     try {
-                        const encoderModel = context.container.get<IEncoderModel>('IEncoderModel');
+                        const encoderModel = context.get<IEncoderModel>('IEncoderModel');
                         resolve(encoderModel);
                     } catch (err: any) {
                         reject(err);
@@ -342,11 +342,11 @@ export const set = (container: Container): void => {
 
     container.bind<ILiveStreamBaseModel>('LiveStreamModel').to(LiveStreamModel);
 
-    container.bind<LiveStreamModelProvider>('LiveStreamModelProvider').toProvider(context => {
+    container.bind<LiveStreamModelProvider>('LiveStreamModelProvider').toDynamicValue(context => {
         return () => {
             return new Promise<ILiveStreamBaseModel>((resolve, reject) => {
                 try {
-                    const streamModel = context.container.get<ILiveStreamBaseModel>('LiveStreamModel');
+                    const streamModel = context.get<ILiveStreamBaseModel>('LiveStreamModel');
                     resolve(streamModel);
                 } catch (err: any) {
                     reject(err);
@@ -359,11 +359,11 @@ export const set = (container: Container): void => {
 
     container.bind<ILiveStreamBaseModel>('LiveHLSStreamModel').to(LiveHLSStreamModel);
 
-    container.bind<LiveHLSStreamModelProvider>('LiveHLSStreamModelProvider').toProvider(context => {
+    container.bind<LiveHLSStreamModelProvider>('LiveHLSStreamModelProvider').toDynamicValue(context => {
         return () => {
             return new Promise<ILiveStreamBaseModel>((resolve, reject) => {
                 try {
-                    const streamModel = context.container.get<ILiveStreamBaseModel>('LiveHLSStreamModel');
+                    const streamModel = context.get<ILiveStreamBaseModel>('LiveHLSStreamModel');
                     resolve(streamModel);
                 } catch (err: any) {
                     reject(err);
@@ -374,11 +374,11 @@ export const set = (container: Container): void => {
 
     container.bind<IRecordedStreamBaseModel>('RecordedStreamModel').to(RecordedStreamModel);
 
-    container.bind<RecordedStreamModelProvider>('RecordedStreamModelProvider').toProvider(context => {
+    container.bind<RecordedStreamModelProvider>('RecordedStreamModelProvider').toDynamicValue(context => {
         return () => {
             return new Promise<IRecordedStreamBaseModel>((resolve, reject) => {
                 try {
-                    const streamModel = context.container.get<IRecordedStreamBaseModel>('RecordedStreamModel');
+                    const streamModel = context.get<IRecordedStreamBaseModel>('RecordedStreamModel');
                     resolve(streamModel);
                 } catch (err: any) {
                     reject(err);
@@ -388,11 +388,11 @@ export const set = (container: Container): void => {
     });
 
     container.bind<IRecordedStreamBaseModel>('RecordedHLSStreamModel').to(RecordedHLSStreamModel);
-    container.bind<RecordedHLSStreamModelProvider>('RecordedHLSStreamModelProvider').toProvider(context => {
+    container.bind<RecordedHLSStreamModelProvider>('RecordedHLSStreamModelProvider').toDynamicValue(context => {
         return () => {
             return new Promise<IRecordedStreamBaseModel>((resolve, reject) => {
                 try {
-                    const streamModel = context.container.get<IRecordedStreamBaseModel>('RecordedHLSStreamModel');
+                    const streamModel = context.get<IRecordedStreamBaseModel>('RecordedHLSStreamModel');
                     resolve(streamModel);
                 } catch (err: any) {
                     reject(err);

@@ -8,7 +8,7 @@ export const get: Operation = async (req, res) => {
 
     try {
         const program = await scheduleApiModel.getSchedule(
-            parseInt(req.params.programId, 10),
+            parseInt(req.params.programId as string, 10),
             req.query.isHalfWidth as any,
         );
         if (program === null) {

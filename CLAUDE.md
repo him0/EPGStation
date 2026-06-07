@@ -20,10 +20,12 @@ npm 互換の挙動になるよう設定してある:
 - `nodeLinker: hoisted` … `node_modules` をフラット配置にする。これがないと
   `src/@types/types.d.ts` が参照する `eventemitter3` や transitive な `@types/cors`
   などの型が解決できずビルドが壊れる。
-- `allowBuilds` … `sqlite3` / `mirakurun` のネイティブビルドを許可。
-- `overrides['@types/serve-static']: 1.15.7` … `@types/express`(v4)が transitive で
-  express5 用の `@types/serve-static@2.x` を引き込むと `express.static.mime` の型が
-  消えるため、v4 互換版に固定している。
+- `allowBuilds` … `better-sqlite3` / `mirakurun` のネイティブビルドを許可。
+
+eslint は flat config(`eslint.config.mjs`、eslint 10 以降必須)を使用する。
+
+DB は typeorm 1.0 で node-sqlite3 ドライバが廃止されたため、SQLite 利用時は
+`better-sqlite3` ドライバを使う(設定値 `dbtype: sqlite` はそのまま)。
 
 ## セットアップ
 

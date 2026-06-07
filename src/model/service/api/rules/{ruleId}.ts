@@ -7,7 +7,7 @@ export const get: Operation = async (req, res) => {
     const ruleApiModel = container.get<IRuleApiModel>('IRuleApiModel');
 
     try {
-        const rule = await ruleApiModel.get(parseInt(req.params.ruleId, 10));
+        const rule = await ruleApiModel.get(parseInt(req.params.ruleId as string, 10));
         if (rule !== null) {
             api.responseJSON(res, 200, rule);
         } else {
@@ -61,7 +61,7 @@ export const del: Operation = async (req, res) => {
     const ruleApiModel = container.get<IRuleApiModel>('IRuleApiModel');
 
     try {
-        await ruleApiModel.delete(parseInt(req.params.ruleId, 10));
+        await ruleApiModel.delete(parseInt(req.params.ruleId as string, 10));
         api.responseJSON(res, 200, {
             code: 200,
         });
@@ -100,7 +100,7 @@ export const put: Operation = async (req, res) => {
     const ruleApiModel = container.get<IRuleApiModel>('IRuleApiModel');
 
     const rule = req.body;
-    rule.id = parseInt(req.params.ruleId, 10);
+    rule.id = parseInt(req.params.ruleId as string, 10);
     try {
         await ruleApiModel.update(rule);
         api.responseJSON(res, 200, {
