@@ -54,8 +54,30 @@ class ServiceServer implements IServiceServer {
         }
         this.setSwaggerUI();
         this.createUploadDir();
+        this.stabilizeQuery();
         this.initOpenApi(api);
         this.setStaticFiles();
+    }
+
+    /**
+     * express 5 では req.query が getter となり、アクセスのたびに新しいオブジェクトを返す
+     * (キャッシュされず書き込みもできない)。
+     * express-openapi はクエリの型強制 (coercion) で req.query を書き換えるが、
+     * express 5 ではその変更が破棄され、integer/boolean パラメータが文字列のまま検証されて
+     * 400 (must be integer / must be boolean) になる。
+     * そこで openapi 処理の前に req.query を一度だけ評価し、書き込み可能なプロパティとして固定する。
+     */
+    private stabilizeQuery(): void {
+        this.app.use((req, _res, next) => {
+            const query = req.query;
+            Object.defineProperty(req, 'query', {
+                value: query,
+                writable: true,
+                configurable: true,
+                enumerable: true,
+            });
+            next();
+        });
     }
 
     /**
