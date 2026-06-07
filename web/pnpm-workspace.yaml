@@ -1,0 +1,5 @@
+# web/ を親リポジトリの pnpm workspace から切り離し、独立したプロジェクトとして扱う。
+# (親 EPGStation/pnpm-workspace.yaml を pnpm が遡って参照しないようにするための境界)
+packages: []
+allowBuilds:
+  esbuild: true
