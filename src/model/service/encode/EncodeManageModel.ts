@@ -224,8 +224,15 @@ class EncodeManageModel implements IEncodeManageModel {
 
         this.suspendRecheckTimer = setTimeout(() => {
             this.suspendRecheckTimer = null;
-            this.emitNeedsCheckQueue();
+
+            // checkQueue は一回につき一件だけ開始するため、空き枠の数だけ確認を要求する
+            // (停止時間帯が続いていれば、最初の確認が再びタイマーをセットする)
+            const checkCount = Math.min(this.concurrentEncodeNum - this.runningQueue.length, this.waitQueue.length);
+            for (let i = 0; i < checkCount; i++) {
+                this.emitNeedsCheckQueue();
+            }
         }, EncodeManageModel.SUSPEND_RECHECK_INTERVAL);
+        this.suspendRecheckTimer.unref();
     }
 
     /**
