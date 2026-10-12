@@ -141,6 +141,11 @@ export default interface IConfigFile {
         suffix?: string; // 非エンコードコマンドの場合 undefined
         rate?: number;
     }[];
+    // エンコードを開始しない時間帯 (HH:mm 形式, 日跨ぎ可)
+    encodeSuspendTimes?: {
+        start: string;
+        end: string;
+    }[];
 
     // 予約定期更新時のログ出力を抑えるか
     isSuppressReservesUpdateAllLog: boolean;

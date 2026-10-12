@@ -14,6 +14,7 @@ import { EncodeOption, EncoderModelProvider, IEncoderModel } from './IEncoderMod
 @injectable()
 class EncodeManageModel implements IEncodeManageModel {
     private log: ILogger;
+    private configure: IConfiguration;
     private executeManagementModel: IExecutionManagementModel;
     private encoderModelProvider: EncoderModelProvider;
     private encodeEvent: IEncodeEvent;
@@ -21,6 +22,7 @@ class EncodeManageModel implements IEncodeManageModel {
     private waitQueue: IEncoderModel[] = [];
     private runningQueue: IEncoderModel[] = [];
     private idCnt: number = 1;
+    private suspendRecheckTimer: NodeJS.Timeout | null = null;
 
     private listener: events.EventEmitter = new events.EventEmitter();
 
@@ -32,6 +34,7 @@ class EncodeManageModel implements IEncodeManageModel {
         @inject('IEncodeEvent') encodeEvent: IEncodeEvent,
     ) {
         this.log = logger.getLogger();
+        this.configure = configure;
         this.executeManagementModel = executeManagementModel;
         this.concurrentEncodeNum = configure.getConfig().concurrentEncodeNum;
         this.encoderModelProvider = encoderModelProvider;
@@ -118,6 +121,15 @@ class EncodeManageModel implements IEncodeManageModel {
             return;
         }
 
+        // エンコード停止時間帯の場合は開始せず、時間をおいて再チェックする
+        if (this.isSuspendTime(new Date()) === true) {
+            // 実行権開放
+            this.executeManagementModel.unLockExecution(exeId);
+            this.scheduleSuspendRecheck();
+
+            return;
+        }
+
         // waitQueue から取り出す
         const encoder = this.waitQueue.shift();
         if (typeof encoder === 'undefined') {
@@ -165,6 +177,55 @@ class EncodeManageModel implements IEncodeManageModel {
         if (needsFinalize === true) {
             this.finalize(encodeOption.encodeId);
         }
+    }
+
+    /**
+     * 指定した時刻がエンコード停止時間帯に含まれるか
+     * config は再読み込みされるため毎回取得する
+     * @param now: Date
+     * @return boolean 停止時間帯なら true
+     */
+    private isSuspendTime(now: Date): boolean {
+        const suspendTimes = this.configure.getConfig().encodeSuspendTimes;
+        if (typeof suspendTimes === 'undefined' || suspendTimes === null || suspendTimes.length === 0) {
+            return false;
+        }
+
+        const current = now.getHours() * 60 + now.getMinutes();
+        for (const time of suspendTimes) {
+            const start = EncodeManageModel.parseTime(time?.start);
+            const end = EncodeManageModel.parseTime(time?.end);
+            if (start === null || end === null) {
+                this.log.encode.warn(`invalid encodeSuspendTimes: ${JSON.stringify(time)}`);
+                continue;
+            }
+
+            if (start === end) {
+                continue;
+            }
+
+            // start < end なら当日内、start > end なら日跨ぎ
+            const isInRange = start < end ? start <= current && current < end : start <= current || current < end;
+            if (isInRange === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 停止時間帯明けにキューを再チェックするためのタイマーをセットする
+     */
+    private scheduleSuspendRecheck(): void {
+        if (this.suspendRecheckTimer !== null) {
+            return;
+        }
+
+        this.suspendRecheckTimer = setTimeout(() => {
+            this.suspendRecheckTimer = null;
+            this.emitNeedsCheckQueue();
+        }, EncodeManageModel.SUSPEND_RECHECK_INTERVAL);
     }
 
     /**
@@ -447,6 +508,31 @@ namespace EncodeManageModel {
     export const NEEDS_CHECK_QUEUE_EVENT = 'needsCheckQueue';
     export const ENCODE_PRIPORITY = 10;
     export const DEFAULT_TIMEOUT_RATE = 4.0;
+    export const SUSPEND_RECHECK_INTERVAL = 1000 * 60;
+
+    /**
+     * HH:mm 形式の文字列を 0 時からの経過分に変換する
+     * @param str: string
+     * @return number | null 不正な値の場合は null
+     */
+    export const parseTime = (str: unknown): number | null => {
+        if (typeof str !== 'string') {
+            return null;
+        }
+
+        const match = str.match(/^(\d{1,2}):(\d{2})$/);
+        if (match === null) {
+            return null;
+        }
+
+        const hours = parseInt(match[1], 10);
+        const minutes = parseInt(match[2], 10);
+        if (hours > 24 || minutes > 59 || (hours === 24 && minutes !== 0)) {
+            return null;
+        }
+
+        return hours * 60 + minutes;
+    };
 }
 
 export default EncodeManageModel;
